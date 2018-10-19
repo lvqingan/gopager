@@ -137,7 +137,7 @@ paginator := gopager.NewLengthAwarePaginator(result, 100, 5, 1, map[string]strin
 ### Appends query string
 
 ```golang
-paginator := NewPaginator(make([]int, 20), 20, 10, 1, nil)
+paginator := gopager.NewPaginator(make([]int, 20), 20, 10, 1, nil)
 
 paginator.Appends(map[string][]string{
     "keyword": {"andy"},
