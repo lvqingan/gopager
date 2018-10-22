@@ -40,7 +40,7 @@ And the pagination bar could be a list of links with page number
         <a class="pagination-next" href="{{.paginator.NextPageUrl}}">Next</a>
     {{end}}
 
-    {{if gt .articles2.LastPage 1}}
+    {{if gt .paginator.LastPage 1}}
     <ul class="pagination-list">
         {{range $page, $url := .paginator.Elements }}
         <li>
