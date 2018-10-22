@@ -82,14 +82,14 @@ The template should be
 
 {{if gt .paginator.LastPage 1}}
     <ul class="pagination-list">
-       {{range $element := .Elements}}
+       {{range $element := paginator.Elements}}
            {{if $element.Show}}
                {{if $element.IsDots }}
                    <li class="pagination-link is-disabled"><span>...</span></li>
                {{else}}
                    {{range $page, $url := $element.Items}}
                        <li>
-                       {{ if eq $page $.CurrentPage}}
+                       {{ if eq $page $.paginator.CurrentPage}}
                            <a class="pagination-link is-current" href="{{$url}}">{{$page}}</a>
                        {{else}}
                            <a class="pagination-link" href="{{$url}}">{{$page}}</a>
