@@ -1,13 +1,18 @@
 package gopager
 
 import (
-	"fmt"
 	"strconv"
 )
 
 type TLengthAwarePaginator struct {
 	TPaginator
 	onEachSide int
+}
+
+type TElement struct {
+	Show bool
+	IsDots bool
+	Items map[int]string
 }
 
 func NewLengthAwarePaginator(items interface{}, total int, perPage int, currentPage int, options map[string]string) *TLengthAwarePaginator {
@@ -31,61 +36,90 @@ func NewLengthAwarePaginator(items interface{}, total int, perPage int, currentP
 	return lengthAwarePaginator
 }
 
-func (this *TLengthAwarePaginator) getSmallSlider() []map[int]string {
-	return []map[int]string{this.getUrlRange(1, this.LastPage), {}, {},}
+func (p *TLengthAwarePaginator) getSmallSlider() map[string]map[int]string {
+	return map[string]map[int]string{
+		"first":  p.getUrlRange(1, p.LastPage),
+		"slider": nil,
+		"last":   nil,
+	}
 }
 
-func (this *TLengthAwarePaginator) getUrlSlider(onEachSide int) []map[int]string {
+func (p *TLengthAwarePaginator) getUrlSlider(onEachSide int) map[string]map[int]string {
 	window := onEachSide * 2
 
-	if ! this.HasPage() {
-		return []map[int]string{{}, {}, {},}
+	if ! p.HasPage() {
+		return map[string]map[int]string{"first": nil, "slider": nil, "last": nil,}
 	}
 
-	if this.CurrentPage <= window {
-		return this.getSliderTooCloseToBeginning(window)
-	} else if this.CurrentPage > (this.LastPage - window) {
-		return this.getSliderTooCloseToEnding(window)
+	if p.CurrentPage <= window {
+		return p.getSliderTooCloseToBeginning(window)
+	} else if p.CurrentPage > (p.LastPage - window) {
+		return p.getSliderTooCloseToEnding(window)
 	}
 
-	return this.getFullSlider(onEachSide)
+	return p.getFullSlider(onEachSide)
 }
 
-func (this *TLengthAwarePaginator) getSliderTooCloseToBeginning(window int) []map[int]string {
-	return []map[int]string{
-		this.getUrlRange(1, window+2),
-		{},
-		this.getFinish(),
+func (p *TLengthAwarePaginator) getSliderTooCloseToBeginning(window int) map[string]map[int]string {
+	return map[string]map[int]string{
+		"first":  p.getUrlRange(1, window+2),
+		"slider": nil,
+		"last":   p.getFinish(),
 	}
 }
 
-func (this *TLengthAwarePaginator) getSliderTooCloseToEnding(window int) []map[int]string {
-	last := this.getUrlRange(this.LastPage-(window+2), this.LastPage)
+func (p *TLengthAwarePaginator) getSliderTooCloseToEnding(window int) map[string]map[int]string {
+	last := p.getUrlRange(p.LastPage-(window+2), p.LastPage)
 
-	return []map[int]string{this.getStart(), {}, last,}
+	return map[string]map[int]string{"first": p.getStart(), "slider": nil, "last": last,}
 }
 
-func (this *TLengthAwarePaginator) getFullSlider(onEachSide int) []map[int]string {
-	return []map[int]string{this.getStart(), this.getAdjacentUrlRange(onEachSide), this.getFinish(),}
+func (p *TLengthAwarePaginator) getFullSlider(onEachSide int) map[string]map[int]string {
+	return map[string]map[int]string{
+		"first":  p.getStart(),
+		"slider": p.getAdjacentUrlRange(onEachSide),
+		"last":   p.getFinish(),
+	}
 }
 
-func (this *TLengthAwarePaginator) getAdjacentUrlRange(onEachSide int) map[int]string {
-	return this.getUrlRange(this.CurrentPage-onEachSide, this.CurrentPage+onEachSide)
+func (p *TLengthAwarePaginator) getAdjacentUrlRange(onEachSide int) map[int]string {
+	return p.getUrlRange(p.CurrentPage-onEachSide, p.CurrentPage+onEachSide)
 }
 
-func (this *TLengthAwarePaginator) getStart() map[int]string {
-	return this.getUrlRange(1, 2)
+func (p *TLengthAwarePaginator) getStart() map[int]string {
+	return p.getUrlRange(1, 2)
 }
 
-func (this *TLengthAwarePaginator) getFinish() map[int]string {
-	return this.getUrlRange(this.LastPage-1, this.LastPage)
+func (p *TLengthAwarePaginator) getFinish() map[int]string {
+	return p.getUrlRange(p.LastPage-1, p.LastPage)
 }
 
-func (this *TLengthAwarePaginator) Elements() []map[int]string {
-	if this.LastPage < (this.onEachSide*2)+6 {
-		fmt.Println(this.getSmallSlider())
-		return this.getSmallSlider()
+func (p *TLengthAwarePaginator) Elements() []TElement {
+	window := p.makeWindow()
+	sliderDots := TElement{false, false, nil}
+	lastDots := TElement{false, false, nil}
+
+	if window["slider"] != nil {
+		sliderDots = TElement{true, true, nil}
 	}
 
-	return this.getUrlSlider(this.onEachSide)
+	if window["last"] != nil {
+		lastDots = TElement{true, true, nil}
+	}
+
+	return []TElement{
+		{true, false, window["first"]},
+		sliderDots,
+		{true, false, window["slider"]},
+		lastDots,
+		{true, false, window["last"]},
+	}
+}
+
+func (p *TLengthAwarePaginator) makeWindow() map[string]map[int]string {
+	if p.LastPage < (p.onEachSide*2)+6 {
+		return p.getSmallSlider()
+	}
+
+	return p.getUrlSlider(p.onEachSide)
 }

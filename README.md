@@ -82,22 +82,23 @@ The template should be
 
 {{if gt .paginator.LastPage 1}}
     <ul class="pagination-list">
-        {{range $idx, $element := .paginator.Elements}}
-            {{if or (eq $idx 0) (and (eq $idx 1) (gt (len $element) 0)) (and (eq $idx 2) (gt (len $element) 0))}}
-                {{if or (and (eq $idx 1) (gt (len $element) 0)) (and (eq $idx 2) (gt (len $element) 0))}}
-                    <li class="pagination-link is-disabled"><span>...</span></li>
-                {{end}}
-                {{range $page, $url := $element}}
-                    <li>
-                    {{ if eq $page $.paginator.CurrentPage}}
-                        <a class="pagination-link is-current" href="{{$url}}">{{$page}}</a>
-                    {{else}}
-                        <a class="pagination-link" href="{{$url}}">{{$page}}</a>
-                    {{end}}
-                    </li>
-                {{end}}
-            {{end}}
-        {{end}}
+       {{range $element := .Elements}}
+           {{if $element.Show}}
+               {{if $element.IsDots }}
+                   <li class="pagination-link is-disabled"><span>...</span></li>
+               {{else}}
+                   {{range $page, $url := $element.Items}}
+                       <li>
+                       {{ if eq $page $.CurrentPage}}
+                           <a class="pagination-link is-current" href="{{$url}}">{{$page}}</a>
+                       {{else}}
+                           <a class="pagination-link" href="{{$url}}">{{$page}}</a>
+                       {{end}}
+                       </li>
+                   {{end}}
+               {{end}}
+           {{end}}
+       {{end}}
     </ul>
 {{end}}
 </nav>
@@ -105,7 +106,7 @@ The template should be
 
 ### Change url path
 
-The default path is `.` and you can change it by yourself
+The default path is `/` and you can change it by yourself
 
 ```golang
 paginator := gopager.NewLengthAwarePaginator(result, 100, 5, 1, map[string]string{

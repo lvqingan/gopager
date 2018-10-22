@@ -10,16 +10,24 @@ func TestSliderCloseToBeginning(t *testing.T) {
 
 	elements := paginator.Elements()
 
-	if len(elements[0]) != 8 {
-		t.Errorf("The first part should contains 8 links, but got %v", len(elements[0]))
+	if len(elements[0].Items) != 8 {
+		t.Errorf("The first part should contains 8 links, but got %v", len(elements[0].Items))
 	}
 
-	if len(elements[1]) != 0 {
-		t.Errorf("The slider part should be empty, but got %v", len(elements[0]))
+	if elements[1].Show {
+		t.Errorf("Slider dots should not display")
 	}
 
-	if len(elements[2]) != 2 {
-		t.Errorf("The last part should contains 2 links, but got %v", len(elements[0]))
+	if len(elements[2].Items) != 0 {
+		t.Errorf("The slider part should be empty, but got %v", len(elements[0].Items))
+	}
+
+	if ! elements[3].Show {
+		t.Errorf("Last dots should dispaly")
+	}
+
+	if len(elements[4].Items) != 2 {
+		t.Errorf("The last part should contains 2 links, but got %v", len(elements[0].Items))
 	}
 }
 
@@ -28,16 +36,24 @@ func TestSliderCloseToEnding(t *testing.T) {
 
 	elements := paginator.Elements()
 
-	if len(elements[0]) != 2 {
-		t.Errorf("The first part should contains 2 links, but got %v", len(elements[0]))
+	if len(elements[0].Items) != 2 {
+		t.Errorf("The first part should contains 2 links, but got %v", len(elements[0].Items))
 	}
 
-	if len(elements[1]) != 0 {
-		t.Errorf("The slider part should be empty, but got %v", len(elements[0]))
+	if elements[1].Show {
+		t.Errorf("Slider dots should not display")
 	}
 
-	if len(elements[2]) != 9 {
-		t.Errorf("The last part should contains 9 links, but got %v", len(elements[0]))
+	if len(elements[2].Items) != 0 {
+		t.Errorf("The slider part should be empty, but got %v", len(elements[0].Items))
+	}
+
+	if ! elements[3].Show {
+		t.Errorf("Last dots should display")
+	}
+
+	if len(elements[4].Items) != 9 {
+		t.Errorf("The last part should contains 9 links, but got %v", len(elements[0].Items))
 	}
 }
 
@@ -46,16 +62,24 @@ func TestFullSlider(t *testing.T) {
 
 	elements := paginator.Elements()
 
-	if len(elements[0]) != 2 {
-		t.Errorf("The first part should contains 2 links, but got %v", len(elements[0]))
+	if len(elements[0].Items) != 2 {
+		t.Errorf("The first part should contains 2 links, but got %v", len(elements[0].Items))
 	}
 
-	if len(elements[1]) != 7 {
-		t.Errorf("The slider part should contains 7 links, but got %v", len(elements[0]))
+	if ! elements[1].Show {
+		t.Errorf("Slider dots should display")
 	}
 
-	if len(elements[2]) != 2 {
-		t.Errorf("The last part should contains 2 links, but got %v", len(elements[0]))
+	if len(elements[2].Items) != 7 {
+		t.Errorf("The slider part should contains 7 links, but got %v", len(elements[0].Items))
+	}
+
+	if ! elements[3].Show {
+		t.Errorf("Last dots should display")
+	}
+
+	if len(elements[4].Items) != 2 {
+		t.Errorf("The last part should contains 2 links, but got %v", len(elements[0].Items))
 	}
 }
 
