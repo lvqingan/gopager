@@ -171,10 +171,8 @@ It can be convert to json:
    "to": 15,
    "data":[
         {
-            // Result Object
         },
         {
-            // Result Object
         }
    ]
 }
