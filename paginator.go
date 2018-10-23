@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"reflect"
 )
 
 type TPaginator struct {
@@ -143,4 +144,30 @@ func (this *TPaginator) getUrlRange(start int, end int) map[int]string {
 
 func (this *TPaginator) HasPage() bool {
 	return this.LastPage > 1
+}
+
+func (p *TPaginator) firstItem() int {
+	if p.count() > 0 {
+		return (p.CurrentPage - 1) * p.PerPage + 1
+	} else {
+		return -1
+	}
+}
+
+func (p *TPaginator) lastItem() int {
+	if p.count() > 0 {
+		return p.firstItem() + p.count() - 1
+	} else {
+		return -1
+	}
+}
+
+func (p *TPaginator) count() int {
+	v := reflect.ValueOf(p.Items)
+
+	return v.Len()
+}
+
+func (p *TPaginator) lastPage() int {
+	return p.LastPage
 }

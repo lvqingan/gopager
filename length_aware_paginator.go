@@ -123,3 +123,20 @@ func (p *TLengthAwarePaginator) makeWindow() map[string]map[int]string {
 
 	return p.getUrlSlider(p.onEachSide)
 }
+
+func (p *TLengthAwarePaginator) GetStringMap() map[string]interface{} {
+	return map[string]interface{}{
+		"current_page":   p.CurrentPage,
+		"data":           p.Items,
+		"first_page_url": p.url(1),
+		"from":           p.firstItem(),
+		"last_page":      p.lastPage(),
+		"last_page_url":  p.url(p.lastPage()),
+		"next_page_url":  p.NextPageUrl(),
+		"path":           p.Path,
+		"per_page":       p.PerPage,
+		"prev_page_url":  p.PreviousPageUrl(),
+		"to":             p.lastItem(),
+		"total":          p.Total,
+	}
+}

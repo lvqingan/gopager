@@ -147,3 +147,35 @@ paginator.Appends(map[string][]string{
 ```
 
 The path will be `/?keyword=andy&names[]=tom&names[]=jack&page=1`
+
+### Get map data for json
+
+```golang
+mapData := paginator.GetStringMap()
+```
+
+It can be convert to json:
+
+```json
+{
+   "total": 50,
+   "per_page": 15,
+   "current_page": 1,
+   "last_page": 4,
+   "first_page_url": "http://localhost?page=1",
+   "last_page_url": "http://localhost?page=4",
+   "next_page_url": "http://localhost?page=2",
+   "prev_page_url": "",
+   "path": "http://localhost",
+   "from": 1,
+   "to": 15,
+   "data":[
+        {
+            // Result Object
+        },
+        {
+            // Result Object
+        }
+   ]
+}
+```
