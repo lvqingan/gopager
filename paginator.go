@@ -26,7 +26,8 @@ func NewPaginator(items interface{}, total int, perPage int, currentPage int, op
 		CurrentPage: currentPage,
 	}
 
-	paginator.LastPage = int(math.Max(math.Ceil(float64(total/perPage)), 1))
+	//paginator.LastPage = int(math.Max(math.Ceil(float64(total/perPage)), 1))
+	paginator.LastPage = int(math.Max(math.Ceil(float64(total)/float64(perPage)), 1))
 
 	if options != nil {
 		for optionKey, optionValue := range options {
